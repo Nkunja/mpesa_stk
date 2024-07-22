@@ -29,7 +29,7 @@ function App() {
     }
   };
 
-  const parsePhoneNumber = (input) => {
+  const parsePhoneNumber = (input: any) => {
     // Remove any non-digit characters
     const digits = input.replace(/\D/g, '');
     
@@ -70,7 +70,7 @@ function App() {
         () => checkPaymentStatus(response.data.CheckoutRequestID),
         10000
       );
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error initiating payment:", error);
       setError(error.message === "Invalid phone number format" 
         ? "Invalid phone number format. Please use 0712345678, or 254712345678." 
