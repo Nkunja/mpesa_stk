@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3001"; // Replace with your actual server URL
+const API_BASE_URL = "http://localhost:3000"; // Replace with your actual server URL
 
 function App() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -29,18 +29,39 @@ function App() {
     }
   };
 
+  const parsePhoneNumber = (input) => {
+    // Remove any non-digit characters
+    const digits = input.replace(/\D/g, '');
+    
+    if (digits.length === 9 && digits.startsWith('7')) {
+      return `254${digits}`;
+    } else if (digits.length === 10 && digits.startsWith('07')) {
+      return `254${digits.slice(1)}`;
+    } else if (digits.length === 12 && digits.startsWith('254')) {
+      return digits;
+    } else {
+      throw new Error("Invalid phone number format");
+    }
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+
   const initiatePayment = async () => {
     if (!phoneNumber || !amount) {
       setError("Please enter both phone number and amount.");
       return;
     }
-    setIsLoading(true);
-    setError("");
-    setPaymentStatus("Initiating payment...");
 
     try {
+      const parsedPhoneNumber = parsePhoneNumber(phoneNumber);
+      setIsLoading(true);
+      setError("");
+      setPaymentStatus("Initiating payment...");
+
       const response = await axios.post(`${API_BASE_URL}/initiate-payment`, {
-        phoneNumber,
+        phoneNumber: parsedPhoneNumber,
         amount: parseInt(amount),
       });
       setPaymentStatus("Payment initiated. Waiting for confirmation...");
@@ -51,7 +72,9 @@ function App() {
       );
     } catch (error) {
       console.error("Error initiating payment:", error);
-      setError("Payment initiation failed. Please try again.");
+      setError(error.message === "Invalid phone number format" 
+        ? "Invalid phone number format. Please use 0712345678, or 254712345678." 
+        : "Payment initiation failed. Please try again.");
       setPaymentStatus("");
     } finally {
       setIsLoading(false);
@@ -117,13 +140,13 @@ function App() {
                     className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600"
                     placeholder="Phone Number"
                     value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    onChange={handlePhoneNumberChange}
                   />
                   <label
                     htmlFor="phoneNumber"
                     className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
                   >
-                    Phone Number
+                    Phone Number 
                   </label>
                 </div>
                 <div className="relative">
