@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const API_BASE_URL = "http://localhost:3000"; // Replace with your actual server URL
@@ -44,7 +44,7 @@ function App() {
     }
   };
 
-  const handlePhoneNumberChange = (e) => {
+  const handlePhoneNumberChange = (e: any) => {
     setPhoneNumber(e.target.value);
   };
 

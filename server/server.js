@@ -69,8 +69,8 @@ app.post("/initiate-payment", async (req, res) => {
       PartyB: SHORTCODE,
       PhoneNumber: phoneNumber,
       CallBackURL: "https://your-callback-url.com/callback",
-      AccountReference: "CompanyXLTD",
-      TransactionDesc: "Payment of X",
+      AccountReference: "Sir Nkunja",
+      TransactionDesc: "We Tuma tu Pesa",
     };
 
     const response = await axios.post(url, data, {
