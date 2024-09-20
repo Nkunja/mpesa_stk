@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3000"; // Replace with your actual server URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
 
 function App() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -21,6 +22,7 @@ function App() {
     try {
       const response = await axios.get(`${API_BASE_URL}/access-token`);
       setAccessToken(response.data.access_token);
+      console.log(accessToken);
     } catch (error) {
       console.error("Error getting access token:", error);
       setError("Failed to get access token. Please try again later.");
